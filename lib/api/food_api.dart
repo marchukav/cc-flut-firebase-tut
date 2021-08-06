@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebasetut1/model/food.dart';
 import 'package:firebasetut1/model/user.dart';
 import 'package:firebasetut1/notifier/auth_notifier.dart';
+import 'package:firebasetut1/notifier/food_notifier.dart';
 
 login(IntUser user, AuthNotifier authNotifier) async {
   try {
@@ -60,4 +63,35 @@ initializeCurrentUser(AuthNotifier authNotifier) async {
     print(firebaseUser);
     authNotifier.setUser(firebaseUser);
   }
+}
+
+getFood(FoodNotifier foodNotifier) async {
+  try {
+    FirebaseFirestore.instance
+        .collection('food')
+        .get()
+        .then((QuerySnapshot querySnapshot) {
+      List<Food> _foodList = [];
+      // snapshot.docs.forEach((document) {
+      querySnapshot.docs.forEach((doc) async {
+        Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+        Food food = Food.fromMap(data);
+        _foodList.add(food);
+      });
+      foodNotifier.foodList = _foodList;
+    });
+  } catch (e) {
+    print(e);
+  }
+
+  // QuerySnapshot snapshot =
+  //     await FirebaseFirestore.instance.collection('food').get();
+  //
+  // List<Food> _foodList = [];
+  // snapshot.docs.forEach((document) {
+  //   Food food = Food.fromMap(document.data() as Map<String, dynamic>);
+  //   _foodList.add(food);
+  // });
+  //
+  // foodNotifier.foodList = _foodList;
 }

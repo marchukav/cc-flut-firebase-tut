@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebasetut1/screens/feed.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'notifier/food_notifier.dart';
 import 'screens/login.dart';
 import 'package:firebasetut1/notifier/auth_notifier.dart';
 
@@ -10,7 +11,10 @@ void main() async {
   await Firebase.initializeApp();
   runApp(
     MultiProvider(
-      providers: [ChangeNotifierProvider(create: (context) => AuthNotifier())],
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthNotifier()),
+        ChangeNotifierProvider(create: (context) => FoodNotifier()),
+      ],
       child: MyApp(),
     ),
   );
